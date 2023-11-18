@@ -1,4 +1,7 @@
 import numpy as np
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 
 # Set this to True if you are on the Chroma team, False if you are on the PineCone team
 I_AM_CHROMA_TEAM = True

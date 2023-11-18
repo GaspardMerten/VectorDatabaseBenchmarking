@@ -1,3 +1,4 @@
 chromadb
 pinecone-client
 numpy
+python-dotenv
