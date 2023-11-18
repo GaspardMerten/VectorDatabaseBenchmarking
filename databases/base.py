@@ -15,6 +15,7 @@ class AVectorDatabase(abc.ABC):
         - upsert: Upsert a single vector
         - query: Query the database for similar vectors, top-k
         - reset: Reset the database, delete the collection
+        - create_index: Create an index on the vector column
     """
 
     @abc.abstractmethod
@@ -66,5 +67,12 @@ class AVectorDatabase(abc.ABC):
     def reset(self) -> None:
         """
         Reset the database, delete the collection.
+        """
+        pass
+
+    @abc.abstractmethod
+    def create_index(self) -> None:
+        """
+        Create an index on the vector column.
         """
         pass
