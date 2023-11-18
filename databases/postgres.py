@@ -37,7 +37,7 @@ class PgVectorDatabase(AVectorDatabase):
         Upsert a batch of vectors using pgvector.
         """
 
-        batch_size = min(size, 500)
+        batch_size = min(size, 1000)
 
         for batch in range(0, size, batch_size):
             batch_vectors = []
@@ -51,7 +51,7 @@ class PgVectorDatabase(AVectorDatabase):
             query = f"INSERT INTO {self.table_name} (vector) VALUES (%s) ON CONFLICT (id) DO UPDATE SET vector = EXCLUDED.vector"
             execute_batch(self.cursor, query, [(vec,) for vec in batch_vectors])
 
-        self.connection.commit()
+            self.connection.commit()
 
     def upsert(self, vector: Vector) -> None:
         """
