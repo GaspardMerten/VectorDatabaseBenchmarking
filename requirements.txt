@@ -2,3 +2,4 @@ chromadb
 pinecone-client
 numpy
 python-dotenv
+psycopg2

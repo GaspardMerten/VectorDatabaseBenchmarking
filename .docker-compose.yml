@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  db-vector-pg:
+    image: ankane/pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+
+
+
+
+volumes:
+  db-vector-pg:

@@ -1,4 +1,6 @@
-from .base import AVectorDatabase
+from typing import List
+
+from .base import AVectorDatabase, Vector
 
 
 class Pine(AVectorDatabase):

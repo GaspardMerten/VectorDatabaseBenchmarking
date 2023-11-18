@@ -76,3 +76,20 @@ class AVectorDatabase(abc.ABC):
         Create an index on the vector column.
         """
         pass
+
+    @abc.abstractmethod
+    def close(self) -> None:
+        """
+        Close the connection to the database.
+        """
+        pass
+
+    @abc.abstractmethod
+    def get_storage_size(self) -> int:
+        """
+        Get the storage size of the database in bytes.
+        """
+        pass
+
+    def __del__(self):
+        self.close()

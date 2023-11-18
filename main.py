@@ -21,7 +21,7 @@ else:
 def generate_random_vectors():
     rand = np.random.rand(VECTOR_SIZE, 128)
     # Normalize the vectors by dividing each vector by its norm
-    return rand / np.linalg.norm(rand, axis=1)[:, None]
+    return (rand / np.linalg.norm(rand, axis=1)[:, None]).tolist()
 
 
 db.batch_upsert(generate_random_vectors())
