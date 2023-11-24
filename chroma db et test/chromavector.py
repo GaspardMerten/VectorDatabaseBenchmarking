@@ -26,12 +26,12 @@ class ChromaVectorDatabase(AVectorDatabase):
         """
         self.collection.add( embeddings=vector, ids=id)
 
-    def batch_upsert(self, vectors: List[Vector]) -> None:
+    def batch_upsert(self, vectors: List[Vector], ids: List[str]) -> None:
         """
         Upsert a batch of vectors using ChromaDB.
         """
-        for vector in vectors:
-            self.upsert(vector)
+        for vector, id in zip(vectors, ids):
+            self.upsert(vector, id)
         
 
     def query(self, vector: Vector, top_k: int) -> List[str]:
@@ -50,6 +50,7 @@ class ChromaVectorDatabase(AVectorDatabase):
         Reset the database, delete the collection.
         """
         self.chroma_client.reset()
+        self.collection = self.chroma_client.create_collection(name=self.collection_name)
 
 
     def create_index(self) -> None:
