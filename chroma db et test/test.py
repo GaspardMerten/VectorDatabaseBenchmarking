@@ -1,41 +1,35 @@
-from chroma import ChromaVectorDatabase  
-import random
+from typing import List
+from random import random
+from chromavector import ChromaVectorDatabase  # Assure-toi d'importer correctement ta classe
 
-def generate_random_vector(dim):
-    return [random.random() for _ in range(dim)]
 
-def test_chroma_vector_database():
-    # Initialize the ChromaDB vector database
-    db_name = "test"
-    vector_dim = 64  # Adjust the vector dimension as needed
-    chroma_db = ChromaVectorDatabase(db_name, vector_dim)
+# Test des fonctionnalités de ChromaVectorDatabase
+def test_chroma_vector_db():
+    db_name = "my_vectors"
+    vector_dim = 10
+    num_vectors = 10
 
-    # Generate random vectors for testing
-    num_vectors = 100
-    vectors = [generate_random_vector(vector_dim) for _ in range(num_vectors)]
+    # Création d'une instance de la base de données ChromaVectorDatabase
+    vector_db = ChromaVectorDatabase(db_name, vector_dim)
 
-    # Test batch upsert
-    chroma_db.batch_upsert(vectors)
+    # Création de vecteurs aléatoires
+    vectors_to_insert = [[random() for _ in range(vector_dim)] for _ in range(num_vectors)]
+    ids_to_insert = [str(i) for i in range(num_vectors)]
 
-    # Test single vector upsert
-    single_vector = generate_random_vector(vector_dim)
-    chroma_db.upsert(single_vector)
+    # Insertion de vecteurs
+    vector_db.batch_upsert(vectors_to_insert, ids_to_insert)
 
-    # Test vector query
-    query_vector = generate_random_vector(vector_dim)
+    # Requête pour trouver les vecteurs similaires
+    query_vector = vectors_to_insert[0]
     top_k = 5
-    results = chroma_db.query(query_vector, top_k)
-    print(f"Query results for vector {query_vector}: {results}")
+    similar_vectors = vector_db.query(query_vector, top_k)
 
-    # Test reset
-    chroma_db.reset()
+    print(f"Similar vectors to query vector {query_vector}: {similar_vectors}")
 
-    # Close the database connection (if applicable)
-    chroma_db.close()
+    # Réinitialisation de la base de données
+    vector_db.reset()
+    print("Database reset successful.")
 
+# Exécution du test
 if __name__ == "__main__":
-    test_chroma_vector_database()
-
-
-
-#Pour test : python test_chroma_vector_database.py
+    test_chroma_vector_db()
