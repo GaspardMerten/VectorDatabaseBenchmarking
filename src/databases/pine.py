@@ -11,13 +11,14 @@ class Pine(AVectorDatabase):
         """
         pinecone.create_index(name, dimension=vector_dim, metric="euclidean")
         pinecone.describe_index(name)
+        self.index = pinecone.Index(name)
 
     def batch_upsert(self, vectors: List[Vector]) -> None:
         for vector in vectors:
             self.upsert(vector)
 
     def upsert(self, vector: Vector) -> None:
-        self.upsert(vector)
+        self.index.upsert([vector])
 
     def query(self, vector: Vector, top_k: int) -> List[str]:
         """
@@ -30,7 +31,7 @@ class Pine(AVectorDatabase):
         Returns:
             List[str]: List of ids of the top-k results
         """
-        self.query(
+        self.index.query(
             vector=vector,
             top_k=top_k,
             include_values=True
