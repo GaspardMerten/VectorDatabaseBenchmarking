@@ -14,23 +14,27 @@ class PineVectorDatabase(AVectorDatabase):
         """
         for index in pinecone.list_indexes():
             pinecone.delete_index(index)
-
         pinecone.create_index(name, dimension=vector_dim, metric="euclidean")
         pinecone.describe_index(name)
         self.index = pinecone.Index(name)
+        self.count = 0
+        self.vector_dim = vector_dim
 
     def batch_upsert(self, vectors: Iterable, size: int = 2000) -> None:
         """
         Upsert a batch of vectors using pgvector.
         """
+        print("Starting batch upsert")
 
-        batch_size = min(size, 1000)
+        batch_size = min(size, 350)
+
+        self.count += size
 
         for batch in range(0, size, batch_size):
             batch_vectors = []
 
-            for vec in vectors:
-                batch_vectors.append(tuple(vec))
+            for i, vec in enumerate(vectors):
+                batch_vectors.append((str(batch + i), vec))
                 if len(batch_vectors) == batch_size:
                     break
 
@@ -50,7 +54,7 @@ class PineVectorDatabase(AVectorDatabase):
         Returns:
             List[str]: List of ids of the top-k results
         """
-        self.index.query(
+        self.query(
             vector=vector,
             top_k=top_k,
         )
@@ -67,8 +71,8 @@ class PineVectorDatabase(AVectorDatabase):
         pass
 
     def get_storage_size(self) -> int:
-        # Get number of vectors in the index
-        print(self.index.describe_index_stats())
+        # See: https://docs.pinecone.io/docs/choosing-index-type-and-size#dimensionality-of-vectors for more info
+        return self.count * self.vector_dim * 4
 
     def close(self) -> None:
         """
