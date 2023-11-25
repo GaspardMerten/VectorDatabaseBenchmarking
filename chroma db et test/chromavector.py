@@ -50,6 +50,7 @@ class ChromaVectorDatabase(AVectorDatabase):
         Reset the database, delete the collection.
         """
         self.chroma_client.reset()
+        self.collection = self.chroma_client.create_collection(name=self.collection_name)
 
 
     def create_index(self) -> None:
