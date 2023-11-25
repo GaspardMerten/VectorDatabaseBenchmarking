@@ -30,12 +30,13 @@ class AVectorDatabase(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def batch_upsert(self, vectors: List[Vector]) -> None:
+    def batch_upsert(self, vectors: List[Vector], size: int = 2000) -> None:
         """
         Upsert a batch of vectors.
 
         Args:
             vectors (List[Vector]): List of vectors to upsert
+            size (int): Number of vectors to upsert
         """
         pass
 

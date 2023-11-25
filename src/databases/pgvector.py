@@ -1,9 +1,9 @@
-from typing import List, Generator, Iterable
+from typing import List, Iterable
 
 import psycopg2
 from psycopg2.extras import execute_batch
 
-from databases.base import AVectorDatabase
+from src.databases.base import AVectorDatabase
 
 Vector = List[float]
 
@@ -47,7 +47,6 @@ class PgVectorDatabase(AVectorDatabase):
                 if len(batch_vectors) == batch_size:
                     break
 
-
             query = f"INSERT INTO {self.table_name} (vector) VALUES (%s) ON CONFLICT (id) DO UPDATE SET vector = EXCLUDED.vector"
             execute_batch(self.cursor, query, [(vec,) for vec in batch_vectors])
 
@@ -73,10 +72,8 @@ class PgVectorDatabase(AVectorDatabase):
         Reset the database, delete the table.
         """
         # Drop all indexes
-        self.cursor.execute(
-            f"SELECT indexname FROM pg_indexes WHERE tablename = '{self.table_name}' AND schemaname = 'public'"
-        )
         self.cursor.execute(f"DROP TABLE IF EXISTS {self.table_name}")
+        self.cursor.execute(f"DROP INDEX IF EXISTS vector_index")
         self.connection.commit()
 
     def create_index(self) -> None:
@@ -90,8 +87,12 @@ class PgVectorDatabase(AVectorDatabase):
         """
         Close the connection to the database.
         """
-        self.cursor.close()
-        self.connection.close()
+
+        if hasattr(self, "cursor"):
+            self.cursor.close()
+
+        if hasattr(self, "connection"):
+            self.connection.close()
 
     def get_storage_size(self) -> int:
         """
