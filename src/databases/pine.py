@@ -54,10 +54,7 @@ class PineVectorDatabase(AVectorDatabase):
         Returns:
             List[str]: List of ids of the top-k results
         """
-        self.query(
-            vector=vector,
-            top_k=top_k,
-        )
+        return self.index.query(vector, top_k=top_k).ids
 
     def reset(self, name: str) -> None:
         """
