@@ -3,9 +3,10 @@ from src.benchmark.steps.query import QueryStep
 from src.data.random import RandomDataset
 from src.databases.chroma import ChromaVectorDatabase
 from src.databases.pgvector import PgVectorDatabase
+from src.databases.pgvectorwithindex import PgVectorWithIndexDatabase
 from src.databases.pine import PineVectorDatabase
 
-databases = [PgVectorDatabase, ChromaVectorDatabase, PineVectorDatabase]
+databases = [PgVectorWithIndexDatabase, PgVectorDatabase, ChromaVectorDatabase, PineVectorDatabase]
 
 steps = [
     (LoadStep, {"count": 1000}),
